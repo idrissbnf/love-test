@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Do You Miss Me?</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            background-color: white;
+            border-radius: 20px;
+            padding: 25px 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #e83e8c;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            word-wrap: break-word;
+        }
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            color: #333;
+        }
+        .buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+        button {
+            padding: 15px 0;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            width: 80%;
+            max-width: 200px;
+        }
+        button:hover, button:active {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        #yesBtn {
+            background-color: #e83e8c;
+            color: white;
+        }
+        #noBtn {
+            background-color: #6c757d;
+            color: white;
+        }
+        .play-game-btn {
+            background-color: #4CAF50;
+            color: white;
+            margin-top: 20px;
+        }
+        .result {
+            font-size: 1.3rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .heart {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .hidden {
+            display: none;
+        }
+        .your-photo {
+            width: 100%;
+            height: auto;
+            max-height: 250px;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin: 15px 0;
+        }
+        .photo-container {
+            margin: 15px 0;
+            position: relative;
+            display: inline-block;
+            width: 90%;
+        }
+        .photo-heart {
+            position: absolute;
+            font-size: 4rem;
+            color: rgba(232, 62, 140, 0.7);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: fadeInOut 2s infinite;
+        }
+        @keyframes fadeInOut {
+            0% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.8); }
+            50% { opacity: 0.7; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0.3; transform: translate(-50%, -50%) scale(0.8); }
+        }
+        
+        /* Game styles */
+        .games-container {
+            padding: 15px;
+        }
+        .game-card {
+            background-color: #f8f9fa;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .game-title {
+            color: #e83e8c;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+        .game-description {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            color: #495057;
+        }
+        .game-question {
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #212529;
+        }
+        .game-options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+        .game-option {
+            background-color: #e9ecef;
+            border: none;
+            border-radius: 25px;
+            padding: 10px 15px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .game-option:hover {
+            background-color: #dee2e6;
+        }
+        .game-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .game-submit {
+            background-color: #e83e8c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        .game-result {
+            margin-top: 15px;
+            font-weight: bold;
+            color: #e83e8c;
+        }
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+            margin-top: 15px;
+        }
+        
+        /* Send options styles */
+        .send-options {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+        .send-option {
+            background-color: #25D366; /* WhatsApp green */
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 90%;
+        }
+        
+        /* Camera styles */
+        .camera-container {
+            width: 100%;
+            margin: 15px 0;
+        }
+        #cameraFeed {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+        #capturedPhoto {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        .camera-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .camera-btn {
+            background-color: #e83e8c;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 25px;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+        }
+        
+        /* Improved mobile touch targets */
+        @media (max-width: 480px) {
+            button {
+                padding: 18px 0;
+                margin: 5px 0;
+            }
+            .container {
+                padding: 20px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="mainPage">
+            <div class="heart">❤️</div>
+            <h1>Hey hube Saraaah!</h1>
+            <div class="question">Do you miss me?</div>
+            
+            <div class="buttons">
+                <button id="yesBtn">Yes</button>
+                <button id="noBtn" class="no-button">No</button>
+            </div>
+        </div>
+        
+        <div id="resultYes" class="result hidden">
+            <div style="font-size: 1.6rem; margin-bottom: 10px;">I miss you too! ❤️</div>
+            <div class="photo-container">
+                <!-- Using a placeholder image, replace this with your actual photo URL -->
+                <img id="yourPhoto" class="your-photo" src="C:/Users/surface/Desktop/hube sraah/image/WhatsApp Image 2025-04-22 at 15.51.00_0485fd70.jpg" alt="Your Photo">
+                <div class="photo-heart">❤️</div>
+            </div>
+            <div>Can't wait to see you again!</div>
+            <button id="playGameBtn" class="play-game-btn">Let's Play a Game 🎮</button>
+        </div>
+        
+        <div id="resultNo" class="result hidden">
+            <div>Really? Are you sure about that? 🥺</div>
+        </div>
+        
+        <!-- Games Section -->
+        <div id="gamesSection" class="games-container hidden">
+            <h1>Love Games</h1>
+            <div class="heart">❤️</div>
+            
+            <!-- Game 1: Would You Rather -->
+            <div id="gameWouldYouRather" class="game-card">
+                <div class="game-title">choose one babee</div>
+                <div class="game-description">Choose between two options. Let's see how well we know each other!</div>
+                <div id="wyrQuestion" class="game-question">Would you rather...</div>
+                <div class="game-options">
+                    <button class="game-option" id="wyrOption1">Option 1</button>
+                    <button class="game-option" id="wyrOption2">Option 2</button>
+                </div>
+                <div id="wyrResult" class="game-result hidden"></div>
+                <button id="wyrNextBtn" class="game-submit">Next Question</button>
+            </div>
+            
+            <!-- Game 2: Love Quiz -->
+            <div id="gameLoveQuiz" class="game-card hidden">
+                <div class="game-title">Love Quiz</div>
+                <div class="game-description">Test how well you know me!</div>
+                <div id="quizQuestion" class="game-question">Question goes here</div>
+                <div class="game-options" id="quizOptions">
+                    <!-- Options will be added by JavaScript -->
+                </div>
+                <div id="quizResult" class="game-result hidden"></div>
+                <button id="quizNextBtn" class="game-submit">Next Question</button>
+            </div>
+            
+            <!-- Game 3: Memory Message -->
+            <div id="gameMemory" class="game-card hidden">
+                <div class="game-title">Sweet Message</div>
+                <div class="game-description">Share a sweet memory or message</div>
+                <div class="game-question">What's a special moment you remember about us?</div>
+                <textarea class="game-input" id="memoryInput" rows="4" placeholder="Write your sweet memory or message here..."></textarea>
+                
+                <!-- Adding send options -->
+                <div class="send-options">
+                    <button id="sendWhatsAppBtn" class="send-option">Send to WhatsApp</button>
+                </div>
+                
+                <div id="memoryResult" class="game-result hidden"></div>
+            </div>
+            
+            <!-- Game 4: Kiss Picture -->
+            <div id="gameKissPicture" class="game-card hidden">
+                <div class="game-title">Send a Kiss Picture</div>
+                <div class="game-description">Take a kiss picture and send it to me babee ❤️</div>
+                
+                <div class="camera-container">
+                    <!-- Video element for camera feed -->
+                    <video id="cameraFeed" autoplay playsinline></video>
+                    
+                    <!-- Image element for captured photo -->
+                    <img id="capturedPhoto" alt="Your kiss photo">
+                    
+                    <!-- Canvas for processing the image -->
+                    <canvas id="photoCanvas" style="display:none;"></canvas>
+                    
+                    <div class="camera-buttons">
+                        <button id="startCameraBtn" class="camera-btn">Start Camera</button>
+                        <button id="capturePhotoBtn" class="camera-btn" disabled>Take Picture</button>
+                        <button id="sendKissBtn" class="camera-btn" disabled>Send Kiss ❤️</button>
+                    </div>
+                </div>
+                
+                <div id="cameraResult" class="game-result hidden"></div>
+            </div>
+            
+            <button id="backToResultBtn" class="back-btn">Back to Photo</button>
+        </div>
+    </div>
+
+    <script>
+        // Main page elements
+        const mainPage = document.getElementById('mainPage');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const resultYes = document.getElementById('resultYes');
+        const resultNo = document.getElementById('resultNo');
+        const playGameBtn = document.getElementById('playGameBtn');
+        const gamesSection = document.getElementById('gamesSection');
+        const backToResultBtn = document.getElementById('backToResultBtn');
+        
+        // Game elements
+        const gameWouldYouRather = document.getElementById('gameWouldYouRather');
+        const gameLoveQuiz = document.getElementById('gameLoveQuiz');
+        const gameMemory = document.getElementById('gameMemory');
+        const gameKissPicture = document.getElementById('gameKissPicture');
+        
+        // Would You Rather game elements
+        const wyrQuestion = document.getElementById('wyrQuestion');
+        const wyrOption1 = document.getElementById('wyrOption1');
+        const wyrOption2 = document.getElementById('wyrOption2');
+        const wyrResult = document.getElementById('wyrResult');
+        const wyrNextBtn = document.getElementById('wyrNextBtn');
+        
+        // Quiz game elements
+        const quizQuestion = document.getElementById('quizQuestion');
+        const quizOptions = document.getElementById('quizOptions');
+        const quizResult = document.getElementById('quizResult');
+        const quizNextBtn = document.getElementById('quizNextBtn');
+        
+        // Memory game elements
+        const memoryInput = document.getElementById('memoryInput');
+        const memoryResult = document.getElementById('memoryResult');
+        const sendWhatsAppBtn = document.getElementById('sendWhatsAppBtn');
+        
+        // Kiss Picture game elements
+        const cameraFeed = document.getElementById('cameraFeed');
+        const capturedPhoto = document.getElementById('capturedPhoto');
+        const photoCanvas = document.getElementById('photoCanvas');
+        const startCameraBtn = document.getElementById('startCameraBtn');
+        const capturePhotoBtn = document.getElementById('capturePhotoBtn');
+        const sendKissBtn = document.getElementById('sendKissBtn');
+        const cameraResult = document.getElementById('cameraResult');
+        
+        // IMPORTANT: Replace this with your actual photo URL
+        // document.getElementById('yourPhoto').src = "your-photo-url.jpg";
+        
+        // CONFIGURE YOUR CONTACT INFO HERE
+        const yourPhoneNumber = "+212621446429"; // Add your phone number with country code (no + or spaces)
+        
+        // Main page button handlers
+        yesBtn.addEventListener('click', () => {
+            mainPage.classList.add('hidden');
+            resultYes.classList.remove('hidden');
+            resultNo.classList.add('hidden');
+        });
+
+        // Make the "No" button move away on mobile using touch events
+        noBtn.addEventListener('touchstart', moveNoButton);
+        noBtn.addEventListener('mouseover', moveNoButton);
+        
+        function moveNoButton(event) {
+            event.preventDefault(); // Prevent default touch behavior
+            
+            const maxX = window.innerWidth - noBtn.offsetWidth - 50;
+            const maxY = window.innerHeight - noBtn.offsetHeight - 50;
+            
+            const newX = Math.max(20, Math.floor(Math.random() * maxX));
+            const newY = Math.max(20, Math.floor(Math.random() * maxY));
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = newX + 'px';
+            noBtn.style.top = newY + 'px';
+            
+            return false;
+        }
+        
+        // In case they somehow click the "No" button
+        noBtn.addEventListener('click', () => {
+            mainPage.classList.add('hidden');
+            resultNo.classList.remove('hidden');
+            
+            // After 2 seconds, automatically trigger the "Yes" response
+            setTimeout(() => {
+                resultNo.classList.add('hidden');
+                resultYes.classList.remove('hidden');
+            }, 2000);
+        });
+        
+        // Game button handler
+        playGameBtn.addEventListener('click', () => {
+            resultYes.classList.add('hidden');
+            gamesSection.classList.remove('hidden');
+            setupWouldYouRatherGame();
+        });
+        
+        backToResultBtn.addEventListener('click', () => {
+            gamesSection.classList.add('hidden');
+            resultYes.classList.remove('hidden');
+        });
+        
+        // Would You Rather Game
+        const wouldYouRatherQuestions = [
+            {
+                question: "Chnawoha nickname li kt tgoliya o ky3jbni bzzf?",
+                option1: "katkoti",
+                option2: "wldi",
+                response1: "Maknhemloch but for u katkotek ❤️",
+                response2: "mommyyyyyyyyyyyyy ❤️"
+            },
+            {
+                question: "chnahowa ahsn mra khrjna ?",
+                option1: "awl mra",
+                option2: "tani mra",
+                response1: " i think f chi hwayj but not the best",
+                response2: "i know it babe mn dak nhar o hnaa 9rab ❤️"
+            },
+            {
+                question: "Would you rather tfarji meaya fl barca o ntmchaw? ",
+                option1: "barcaaaa",
+                option2: "ntmchaww",
+                response1: "hhhhh zbi la mchiti meaya l9hwa",
+                response2: "haja bayna fen ma tkon chi dalma nbossek"
+            }
+        ];
+        
+        let wyrCurrentQuestion = 0;
+        
+        function setupWouldYouRatherGame() {
+            gameWouldYouRather.classList.remove('hidden');
+            gameLoveQuiz.classList.add('hidden');
+            gameMemory.classList.add('hidden');
+            gameKissPicture.classList.add('hidden');
+            
+            displayWouldYouRatherQuestion();
+            
+            wyrOption1.onclick = () => {
+                wyrResult.textContent = wouldYouRatherQuestions[wyrCurrentQuestion].response1;
+                wyrResult.classList.remove('hidden');
+            };
+            
+            wyrOption2.onclick = () => {
+                wyrResult.textContent = wouldYouRatherQuestions[wyrCurrentQuestion].response2;
+                wyrResult.classList.remove('hidden');
+            };
+            
+            wyrNextBtn.onclick = () => {
+                wyrCurrentQuestion++;
+                if (wyrCurrentQuestion >= wouldYouRatherQuestions.length) {
+                    // Move to the next game
+                    wyrCurrentQuestion = 0;
+                    setupLoveQuiz();
+                } else {
+                    displayWouldYouRatherQuestion();
+                }
+            };
+        }
+        
+        function displayWouldYouRatherQuestion() {
+            const question = wouldYouRatherQuestions[wyrCurrentQuestion];
+            wyrQuestion.textContent = question.question;
+            wyrOption1.textContent = question.option1;
+            wyrOption2.textContent = question.option2;
+            wyrResult.classList.add('hidden');
+        }
+        
+        // Love Quiz Game
+        const loveQuizQuestions = [
+            {
+                question: "What's my favorite color?",
+                options: ["Blue", "Red", "Purple", "Black"],
+                correctIndex: 3, // Index is 0-based, so Black is index 3
+                response: "You know me so well! Black is my favorite! 🖤"
+            },
+            {
+                question: "What's my idea of a perfect date?",
+                options: ["Beach picnic", "Movie night", "Hiking adventure", "Dancing"],
+                correctIndex: 2, // Index is 0-based, so Hiking adventure is index 2
+                response: "Yes! A Hiking adventure with you is perfect! 🌄❤️"
+            },
+            {
+                question: "What makes me smile the most?",
+                options: ["Surprise gifts", "Your jokes", "Your smile", "Your messages"],
+                correctIndex: 2, // Index is 0-based, so Your messages is index 3
+                response: "Your smile always make my day brighter! 📱❤️"
+            }
+        ];
+        
+        let quizCurrentQuestion = 0;
+        
+        function setupLoveQuiz() {
+            gameWouldYouRather.classList.add('hidden');
+            gameLoveQuiz.classList.remove('hidden');
+            gameMemory.classList.add('hidden');
+            gameKissPicture.classList.add('hidden');
+            
+            displayQuizQuestion();
+            
+            quizNextBtn.onclick = () => {
+                quizCurrentQuestion++;
+                if (quizCurrentQuestion >= loveQuizQuestions.length) {
+                    // Move to the next game
+                    quizCurrentQuestion = 0;
+                    setupMemoryGame();
+                } else {
+                    displayQuizQuestion();
+                }
+            };
+        }
+        
+        function displayQuizQuestion() {
+            const question = loveQuizQuestions[quizCurrentQuestion];
+            quizQuestion.textContent = question.question;
+            
+            // Clear previous options
+            quizOptions.innerHTML = '';
+            
+            // Add new options
+            question.options.forEach((option, index) => {
+                const optionBtn = document.createElement('button');
+                optionBtn.className = 'game-option';
+                optionBtn.textContent = option;
+                
+                optionBtn.onclick = () => {
+                    if (index === question.correctIndex) {
+                        quizResult.textContent = question.response;
+                    } else {
+                        quizResult.textContent = "Try again! But I still love you! ❤️";
+                    }
+                    quizResult.classList.remove('hidden');
+                };
+                
+                quizOptions.appendChild(optionBtn);
+            });
+            
+            quizResult.classList.add('hidden');
+        }
+        
+        // Memory Message Game with WhatsApp integration
+        function setupMemoryGame() {
+            gameWouldYouRather.classList.add('hidden');
+            gameLoveQuiz.classList.add('hidden');
+            gameMemory.classList.remove('hidden');
+            gameKissPicture.classList.add('hidden');
+            
+            memoryResult.classList.add('hidden');
+            
+            // WhatsApp send functionality
+            sendWhatsAppBtn.onclick = () => {
+                const message = memoryInput.value.trim();
+                if (message) {
+                    // Prepare message for WhatsApp
+                    const encodedMessage = encodeURIComponent("Sweet message from Sarah: " + message);
+                    const whatsappURL = `https://wa.me/${yourPhoneNumber}?text=${encodedMessage}`;
+                    
+                    // Open WhatsApp
+                    window.open(whatsappURL, '_blank');
+                    
+                    // Move to next game after sending
+                    memoryResult.textContent = "Your sweet message sent! ❤️ Now let's take a kiss picture!";
+                    memoryResult.classList.remove('hidden');
+                    
+                    // After 2 seconds, move to the kiss picture game
+                    setTimeout(() => {
+                        setupKissPictureGame();
+                    }, 2000);
+                } else {
+                    memoryResult.textContent = "Please write a message before sending! ❤️";
+                    memoryResult.classList.remove('hidden');
+                }
+            };
+        }
+        
+        // Kiss Picture Game with Camera functionality
+        function setupKissPictureGame() {
+            gameWouldYouRather.classList.add('hidden');
+            gameLoveQuiz.classList.add('hidden');
+            gameMemory.classList.add('hidden');
+            gameKissPicture.classList.remove('hidden');
+            
+            cameraResult.classList.add('hidden');
+            capturedPhoto.style.display = 'none';
+            cameraFeed.style.display = 'block';
+            
+            startCameraBtn.disabled = false;
+            capturePhotoBtn.disabled = true;
+            sendKissBtn.disabled = true;
+            
+            // Variables for camera stream
+            let stream = null;
+            
+            // Start camera button handler
+            startCameraBtn.onclick = async () => {
+                try {
+                    // Request camera access
+                    stream = await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: "user" }, // Use front camera for selfies
+                        audio: false
+                    });
+                    
+                    // Show camera feed
+                    cameraFeed.srcObject = stream;
+                    
+                    // Enable capture button
+                    capturePhotoBtn.disabled = false;
+                    startCameraBtn.disabled = true;
+                    
+                    cameraResult.textContent = "Camera is ready! Make a kiss face and take a picture! 💋";
+                    cameraResult.classList.remove('hidden');
+                } catch (err) {
+                    cameraResult.textContent = "Cannot access camera. Please allow camera access! 📸";
+                    cameraResult.classList.remove('hidden');
+                    console.error("Error accessing camera:", err);
+                }
+            };
+            
+            // Capture photo button handler
+            capturePhotoBtn.onclick = () => {
+                // Set canvas dimensions to match video
+                photoCanvas.width = cameraFeed.videoWidth;
+                photoCanvas.height = cameraFeed.videoHeight;
+                
+                // Draw current video frame to canvas
+                const context = photoCanvas.getContext('2d');
+                context.drawImage(cameraFeed, 0, 0, photoCanvas.width, photoCanvas.height);
+                
+                // Convert canvas to image
+                const imageDataUrl = photoCanvas.toDataURL('image/jpeg');
+                capturedPhoto.src = imageDataUrl;
+                
+                // Show captured photo
+                cameraFeed.style.display = 'none';
+                capturedPhoto.style.display = 'block';
+                
+                // Enable send button
+                sendKissBtn.disabled = false;
+                
+                cameraResult.textContent = "Perfect kiss! 💋 Send it to me!";
+                cameraResult.classList.remove('hidden');
+            };
+            
+            // Send kiss photo button handler
+            sendKissBtn.onclick = () => {
+                try {
+                    // Convert canvas to blob for sharing
+                    photoCanvas.toBlob((blob) => {
+                        // Create a File object
+                        const kissPhoto = new File([blob], "kiss-photo.jpg", { type: "image/jpeg" });
+                        
+                        // Check if Web Share API supports sharing files
+                        if (navigator.canShare && navigator.canShare({ files: [kissPhoto] })) {
+                            navigator.share({
+                                title: "Kiss Photo for You",
+                                text: "Sending you a kiss! 💋",
+                                files: [kissPhoto]
+                            })
+                            .then(() => {
+                                cameraResult.textContent = "Your kiss photo has been shared! ❤️";
+                                cameraResult.classList.remove('hidden');
+                                
+                                // Clean up camera stream
+                                if (stream) {
+                                    stream.getTracks().forEach(track => track.stop());
+                                }
+                            })
+                            .catch((error) => {
+                                console.error("Sharing failed", error);
+                                // Fallback to WhatsApp
+                                shareToWhatsApp();
+                            });
+                        } else {
+                            // Fallback for browsers that don't support sharing files
+                            shareToWhatsApp();
+                        }
+                    }, "image/jpeg", 0.8);
+                } catch (error) {
+                    console.error("Error creating blob:", error);
+                    shareToWhatsApp();
+                }
+            };
+            
+            // Fallback function to share to WhatsApp
+            function shareToWhatsApp() {
+                // Create a message with instructions
+                const message = "I wanted to send you a kiss photo! Open WhatsApp and I'll send it directly. 💋";
+                const encodedMessage = encodeURIComponent(message);
+                const whatsappURL = `https://wa.me/${yourPhoneNumber}?text=${encodedMessage}`;
+                
+                // Open WhatsApp
+                window.open(whatsappURL, '_blank');
+                
+                cameraResult.textContent = "Please send your kiss photo directly through WhatsApp! ❤️";
+                cameraResult.classList.remove('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
